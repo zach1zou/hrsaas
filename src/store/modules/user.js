@@ -3,23 +3,23 @@ import { setTokenTime } from '@/utils/auth'
 export default {
   namespaced: true,
   state: {
-    token: localStorage.getItem('token') || '',
-    userInfo: {}
+    userInfo:localStorage.getItem('userInfo') || {},
+    token:localStorage.getItem('token')|| '',
   },
+  
   mutations: {
     setToken(state, payload) {
       state.token = payload
-      localStorage.setItem('token', payload)
+    localStorage.setItem('token', payload)
     },
     setUserInfo(state, payload) {
       state.userInfo = payload
-        console.log(payload)
+       localStorage.setItem('userInfo',payload)
     }
   },
   actions: {
     async getToken(context, payload) {
       const res = await login(payload)
-    
       context.commit('setToken', res)
       setTokenTime()
     },
