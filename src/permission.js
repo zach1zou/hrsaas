@@ -7,6 +7,11 @@ const whiteList = ['/login', '/404'] // 定义白名单  所有不受权限控�
 router.beforeEach(function (to, from, next) {
   //  首先判断有无token
   if (store.getters.token) {
+    //获取用户信息
+    if (!store.state.user.userInfo.userId) {
+      store.dispatch('user/getUserInfo')
+    }
+
     //   如果有token 继续判断是不是去登录页
     if (to.path === '/login') {
       //  表示去的是登录页
@@ -24,4 +29,3 @@ router.beforeEach(function (to, from, next) {
     }
   }
 })
-

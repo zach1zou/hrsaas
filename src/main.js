@@ -14,7 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import * as directive from '@/directives/index'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -28,6 +28,9 @@ import '@/permission' // permission control
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
+for (let key in directive) { 
+  Vue.directive(key, directive[key]);
+}
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
