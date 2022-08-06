@@ -18,6 +18,7 @@
             <TreeTools
               :treeNode="data"
               @remove="loadDepts"
+              @edit="showEdit"
               @add="showAddDept"
             ></TreeTools>
           </template>
@@ -26,6 +27,7 @@
     </div>
     <!-- 添加部门弹层 -->
     <AddDepts
+      ref="addDepts"
       :visiable.sync="dialogVisible"
       :currentNode="currentNode"
     ></AddDepts>
@@ -66,6 +68,10 @@ export default {
     showAddDept(val) {
       this.dialogVisible = true
       this.currentNode = val
+    },
+    showEdit(val) {
+      this.$refs.addDepts.getDeptById(val.id)
+      this.dialogVisible = true
     }
   },
   components: { TreeTools, AddDepts }
