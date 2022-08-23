@@ -1,31 +1,45 @@
-// 权限拦截 导航守卫 路由守卫  router
-import router from '@/router' // 引入路由实例
-import store from '@/store' // 引入vuex store实例
-
-const whiteList = ['/login', '/404'] // 定义白名单  所有不受权限控制的页面
-// 路由的前置守卫
-router.beforeEach(function (to, from, next) {
-  //  首先判断有无token
-  if (store.getters.token) {
-    //获取用户信息
+import router, { asyncRoutes } from '@/router'
+import store from '@/store'
+// 路由(全局)前置守卫
+// 路由(全局)后置守卫
+// 路由独享守卫
+// 组件内守卫
+// 会在所有路由进入之前触发
+// to: 去哪里的路由信息
+// from: 来自于哪个路由的信息
+// next: 是否进入
+const whiteList = ['/login', '/404']
+router.beforeEach(async (to, from, next) => {
+  const token = store.state.user.token
+  if (token) {
     if (!store.state.user.userInfo.userId) {
-      store.dispatch('user/getUserInfo')
+      // 获取用户信息 store.dispatch的返回值是promise
+      const { roles } = await store.dispatch('user/getUserInfo')
+
+      await store.dispatch('permission/filterRoutes', roles)
+      await store.dispatch('permission/setPointsAction', roles.points)
+      next(to.path)
     }
 
-    //   如果有token 继续判断是不是去登录页
+    // 1. 登录
+    // 是否进入登录页
     if (to.path === '/login') {
-      //  表示去的是登录页
-      next('/') // 跳到主页
+      // 1.1 是 跳到首页
+      next('/')
     } else {
-      next() // 直接放行
+      // 1.2 不是 直接进入
+      next()
     }
   } else {
-    // 如果没有token
-    if (whiteList.indexOf(to.path) > -1) {
-      // 如果找到了 表示在在名单里面
+    // 2. 未登录
+    // 访问的是否在白名单(未登录也能访问的页面)
+    const isCludes = whiteList.includes(to.path)
+    if (isCludes) {
+      // 2.1 在白名单 放行
       next()
     } else {
-      next('/login') // 跳到登录页
+      // 2.2 不在白名单(不登录不能访问) 跳到登录页
+      next('/login')
     }
   }
 })

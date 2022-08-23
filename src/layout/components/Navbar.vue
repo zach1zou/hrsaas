@@ -5,17 +5,21 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
+
+    <!-- <breadcrumb class="breadcrumb-container" /> -->
     <div class="app-breadcrumb">
       {{ $store.state.user.userInfo.companyName }}
-      <span class="breadBtn">体验版</span>
+      <span class="breadBtn">
+        <!-- 切换语言功能 -->
+        <ChangeLanguage></ChangeLanguage
+      ></span>
     </div>
-    <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
-            :src="$store.state.user.userInfo.staffPhoto"
+            :src="$store.state.user.userInfo.staffPhoto + '123'"
             class="user-avatar"
             v-imgError="defaultImg"
           />
@@ -24,8 +28,10 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
-            <el-dropdown-item>项目地址</el-dropdown-item>
+            <el-dropdown-item>
+              <!-- 全屏功能 -->
+              <FullScreen></FullScreen>
+            </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">Log Out</span>
@@ -40,17 +46,22 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import defaultImg from '@/assets/common/head.jpg'
+import FullScreen from '@/components/FullScreen/index.vue'
+import ChangeLanguage from '@/components/changeLanguage/index.vue'
 
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
+  // 如果想在data中定义本地图片路径,需要先引入
   data() {
     return {
-      defaultImg:
-        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      defaultImg
     }
+  },
+  components: {
+    Breadcrumb,
+    Hamburger,
+    FullScreen,
+    ChangeLanguage
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
@@ -75,24 +86,6 @@ export default {
   background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background 0.3s;
-    -webkit-tap-highlight-color: transparent;
-    color: #ffffff;
-    fill: currentColor;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.025);
-    }
-  }
-
-  // .breadcrumb-container {
-  //   float: left;
-  // }
   .app-breadcrumb {
     display: inline-block;
     font-size: 18px;
@@ -110,6 +103,25 @@ export default {
       border-radius: 10px;
       margin-left: 15px;
     }
+  }
+
+  .hamburger-container {
+    line-height: 46px;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    color: #fff;
+    fill: currentColor;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
+    }
+  }
+
+  .breadcrumb-container {
+    float: left;
   }
 
   .right-menu {
@@ -143,11 +155,15 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        // margin-top: 5px;
         position: relative;
         display: flex;
         align-items: center;
         color: #fff;
+        cursor: pointer;
+
+        span {
+          margin: 0 3px;
+        }
 
         .user-avatar {
           cursor: pointer;
@@ -160,7 +176,6 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          // top: 25px;
           font-size: 12px;
         }
       }

@@ -1,39 +1,47 @@
 import request from '@/utils/request'
+
 /**
- * 登录
- * @param {} loginName 用户名
- * @param {} password 密码
- * @param {} code 验证码
- * @param {} clientToken 客户端请求用的token
- * @param {*} loginType 登录类型 0：后台；1：运营运维端；2：合作商后台
- * @returns
- */
+ * 登录请求
+ * @param {Object} data password mobile
+ * @returns promise
+ */
 export function login(data) {
   return request({
     url: '/sys/login',
-    method: 'post',
-    data
+    method: 'POST',
+    data,
   })
 }
 /**
- *获取用户信息
- * @returns
- */
-export const getUserInfoApi = () => {
-  return request({
-    method: 'post',
-    url: '/sys/profile'
-  })
+ * 获取用户信息
+ * @returns promise
+ */
+export function getUserInfoApi() {
+  return request({
+    url: '/sys/profile',
+    method: 'POST',
+  })
 }
 
 /**
- * @param {string} id 用户id
- *根据Id获取详细信息
- * @returns promise
- */
-export const getUserDetailInfoApi = (id) => {
-  return request({
-    method: 'get',
-    url: `/sys/user/${id}`
-  })
+ * 根据用户id获取员工详情数据
+ * @param {String} id 用户id
+ * @returns promise
+ */
+export function getUserDetail(id) {
+  return request({
+    url: '/sys/user/' + id,
+  })
+}
+
+/** *
+ *
+ * 保存员工的基本信息
+ * **/
+export function saveUserDetailById(data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data,
+  })
 }
